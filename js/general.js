@@ -234,7 +234,6 @@ websites that i have been permitted to share"
             var projectTitle = document.createElement("h1"); projectTitle.innerHTML = data.name
             var projectDesc = document.createElement("div"); projectDesc.className = "space-up minor-pad"
             projectDesc.innerHTML = data.description
-            console.log(data)
             viewProject.appendChild(projectTitle)
             images()
             adjust()
