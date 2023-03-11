@@ -120,7 +120,7 @@ window.onload = function(){
     function projectInterface(){
         indicateSection(projectsBtn); setSection(projectInterface.name)
         if(!projectsUI){
-            projectsUI = document.createElement("div"); projectsUI.className = "flex vcenter hcenter"
+            projectsUI = document.createElement("div"); projectsUI.className = "flex vcenter hcenter"; projectsUI.id = "projects-ui"
         }
         main.innerHTML = ""
         main.appendChild(projectsUI); adjust()
