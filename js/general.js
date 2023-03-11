@@ -120,7 +120,7 @@ window.onload = function(){
     function projectInterface(){
         indicateSection(projectsBtn); setSection(projectInterface.name)
         if(!projectsUI){
-            projectsUI = document.createElement("div"); projectsUI.className = "flex vcenter hcenter"; projectsUI.id = "projects-ui"
+            projectsUI = document.createElement("div"); projectsUI.className = "flex vcenter hcenter";
         }
         main.innerHTML = ""
         main.appendChild(projectsUI); adjust()
@@ -129,7 +129,7 @@ window.onload = function(){
             projectReq.loadElement = projectsUI
             projectReq.loadClass = progress
             projectReq.onload = function(req){
-                projectsUI.className = "space-up relative"
+                projectsUI.className = "space-up relative";  projectsUI.id = "projects-ui"
                 parsedProjects = JSON.parse(req.object.response)
                 var heading = document.createElement("h1"); 
                 heading.innerHTML = "Past projects"
