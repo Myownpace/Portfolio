@@ -1,3 +1,0 @@
-In this project we built an Ecommerce store for a client, The application is packed with tons of features including but 
-not limited to auto product recommendation, real time currency transformation so that every user shops using their own currency,
-automatic debit or credit card enrollment for easy payment

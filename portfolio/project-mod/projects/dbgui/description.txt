@@ -1,3 +1,0 @@
-This is an interface for managing database applications, It makes the use of the database effortless.
-It was especially built for less tech savvy users, so that anyone can manage their data easily without needing
-a specialized big data engineer

@@ -1,2 +1,0 @@
-An application for generating qr codes, its use cases are numerous, from generating qr codes for phone numbers or wifi connections
-to qr codes for brand websites

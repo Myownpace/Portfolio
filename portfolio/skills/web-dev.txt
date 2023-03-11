@@ -1,2 +1,0 @@
-This is the creation of web application, which includes the design of the applications as well as the functionality 
-of the application

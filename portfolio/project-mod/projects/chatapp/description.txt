@@ -1,2 +1,0 @@
-In this project i built a chat application, The chat application is equipped with both basic and standard features.
-It was to be built into an existing application as an extension to enable its Users communicate
