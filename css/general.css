@@ -1,4 +1,4 @@
-*{box-sizing: border-box; color:#fff; font-size:18px;}
+*{box-sizing: border-box; color:#fff;}
 a{text-decoration: none;}
 body{transition: none;}
 body.loaded{background-color: rgb(0,0,30); margin:0px; padding: 0px;}
