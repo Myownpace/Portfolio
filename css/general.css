@@ -26,6 +26,7 @@ progress::-webkit-progress-value{
 #logo *{font-size:40px; font-weight: bold; transition: none;}
 #logo{text-align: center; animation-name: fade; animation-duration: 3s; animation-iteration-count: infinite; transition: none;}
 #main{padding:0 5% 0 5%;}
+#main.for-projects{padding:5%}
 .left-border{border-left:2px solid #ffb630; padding-left:2%}
 #introduction .space-up,.space-up._5{margin-top:5%}
 #philosophy{border:2px solid #ffb630;}
