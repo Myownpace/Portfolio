@@ -17,7 +17,7 @@ progress::-webkit-progress-value{
 }
 
 /*menu items*/
-.menu{padding:1%; background-color: rgb(0,0,30); z-index:5}
+.menu{padding:2%; background-color: rgb(0,0,30); z-index:5}
 .menu .item{padding:1%;}
 .menu *{transition: none;}
 .currentLink{border-bottom:2px solid #ffb630;}
