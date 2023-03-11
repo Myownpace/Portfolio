@@ -34,6 +34,7 @@ progress::-webkit-progress-value{
 .black-all *,.black-all{color:#000}
 
 #project-tab-wrapper{max-width:700px}
+#project-tab-wrapper label{margin-top:5%}
 #project-list-view img{
     width:40%; width:40vw; height:40vw; max-width: 50px; max-height:50px; object-fit: cover;
 }
@@ -48,7 +49,6 @@ progress::-webkit-progress-value{
 #project-grid-view{margin-top:5%; padding:3%;}
 
 #view-project{margin-top:5%}
-#view-project label{margin-top:5%}
 #view-project h1{border-bottom: 2px solid #ffb630;}
 #view-project #images{width:100%}
 #view-project #images img{width:100%}
