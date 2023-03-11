@@ -125,7 +125,7 @@ window.onload = function(){
         main.innerHTML = ""
         main.appendChild(projectsUI); adjust()
         if(!projectReq){
-            projectReq = new Req(projectsData,"POST")
+            projectReq = new Req(projectsData,"GET")
             projectReq.loadElement = projectsUI
             projectReq.loadClass = progress
             projectReq.onload = function(req){
