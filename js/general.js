@@ -53,6 +53,7 @@ window.onload = function(){
 
         if(currentSection === indexBtn || currentSection === skillsBtn){
             //adjust the intro section to always cover the full height
+            changeClass(main,"for-projects","")
             if(dim.w >= bigScreen){
                 intro.style.width = "60%"; philo.style.width = "35%"; philo.style.marginLeft = "5%"
                 intro.style.float = "left"; philo.style.float = "left"
@@ -70,6 +71,7 @@ window.onload = function(){
         }
         if(currentSection === projectsBtn){
             projectsUI.style.minHeight = mainHeight.toString() + "px"
+            changeClass(main,"","for-projects")
         }
     }
     function startups(){
