@@ -33,6 +33,7 @@ progress::-webkit-progress-value{
 .theme-bg{background-color: rgb(0,0,30);}
 .black-all *,.black-all{color:#000}
 
+#projects-ui{padding:4% 0% 0% 0%}
 #project-tab-wrapper{max-width:700px}
 #project-tab-wrapper label{margin-top:5%; display:block}
 #project-list-view img{
