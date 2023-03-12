@@ -2,14 +2,19 @@ window.onload = function(){
     var windowLoaded = Number(new Date())
     var timeSinceLogo = windowLoaded - logoStart
     var bigScreen = 700 //the minimum width that is considered a split screen
+    var screenThreshold = 900 // the min screen for split screen for the projects section
+
     var main = document.getElementById("main")
     var menu = document.getElementById("menu")
     var indexBtn = document.getElementById("index-btn")
-    var skillsBtn = document.getElementById("skills-btn")
     var indexUI = document.getElementById("index-wrapper")
     var intro = document.getElementById("introduction")
     var philo = document.getElementById("philosophy")
     var introWrapper = intro.children[0]
+    var skillsBtn = document.getElementById("skills-btn")
+    var skillsTab = document.getElementById("skills")
+    var skillsTabOpen = false
+    var skillsUI = new options(skillsBtn,undefined,genSkillsUI,false)
     var contactBtn = document.getElementById("contact-btn")
     var contactBtn2 = document.getElementById("contact-btn-2")
     var contactUI
@@ -19,13 +24,16 @@ window.onload = function(){
     var projectReq
     var projectsTab
     var parsedProjects
-    var projectsListView,projectsGridView,viewProject,selectedView,tabWrapper,viewProjectSmallScreen,viewProjectOpen
+    var viewControl
+    var projectsListView,projectsGridView,viewProject,selectedView,tabWrapper,viewProjectSmallScreen,viewProjectOpen,
+    selectedViewWindow;
 
     var projectsImages = "projects/images/"
     var projectsData = "projects/projects.json"
 
-    var sectionFunctions = {[projectInterface.name]:projectInterface}
+    var sectionFunctions = {projectInterface:projectInterface}
     var currentSection
+    var currentSectionWindow = indexUI
     var projectViewOptions
     function indicateSection(sectionButton){
         //indicates which section of the web site a user is on
@@ -42,6 +50,11 @@ window.onload = function(){
             else{changeClass(item,"currentLink","")}
         }
     }
+    function getMainHeight(){
+        var menuHeight = elementDim(menu,"h")
+        var windowH = windowDim("h")
+        return windowH - menuHeight
+    }
     function adjust(){
         //adjusts the page
         var menuHeight = elementDim(menu,"h")
@@ -51,7 +64,7 @@ window.onload = function(){
         //adjust the main section
         main.style.marginTop = menuHeight.toString() + "px"
 
-        if(currentSection === indexBtn || currentSection === skillsBtn){
+        if(currentSection === indexBtn){
             //adjust the intro section to always cover the full height
             if(dim.w >= bigScreen){
                 intro.style.width = "60%"; philo.style.width = "35%"; philo.style.marginLeft = "5%"
@@ -70,6 +83,12 @@ window.onload = function(){
         }
         if(currentSection === projectsBtn){
             projectsUI.style.minHeight = mainHeight.toString() + "px"
+            if(dimW >= screenThreshold){
+                projectsUI.id = "projects-ui-big-screen";
+            }
+            else{
+                projectsUI.id = "projects-ui"; 
+            }
         }
     }
     function startups(){
@@ -94,10 +113,10 @@ window.onload = function(){
             headsup.innerHTML = "You can contact Me through any of the following mediums"
             var forums = document.createElement("div"); forums.className = "minor-pad"
             var forumsArray = [
-                {icon:"phone.png",name:"+2349166102474"},
-                {icon:"whatsapp.png",name:"Whatsapp"},
-                {icon:"upwork.png",name:"Upwork"},
-                {icon:"email.png",name:"Email"}
+                {icon:"phone.png",name:"+2349166102474",onclick:copyPhone},
+                {icon:"whatsapp.png",name:"Whatsapp",onclick:wa},
+                {icon:"upwork.png",name:"Upwork",onclick:uw},
+                {icon:"email.png",name:"Chigoziemchidiebube@gmail.com",onclick:copyEmail}
             ]
             genForums()
             append(contactUI,[heading,headsup,forums])
@@ -112,25 +131,50 @@ window.onload = function(){
                 forumIcon.src = "img/" + forumDetails.icon
                 var forumName = document.createElement("span"); forumName.className = "space-left small-text"
                 forumName.innerHTML = forumDetails.name
+                set(forum,forumDetails)
                 append(forum,[forumIcon,forumName])
                 forums.appendChild(forum)
             }
+            function set(forum,forumDetails){
+                if(isFunction(forumDetails.onclick)){
+                    forum.onclick = function(){forumDetails.onclick(forumDetails)}
+                }
+            }
+        }
+        function copyPhone(details){
+            copy(details.name)
+        }
+        function wa(details){
+            window.open("https://wa.link/ftapf2","_blank")
+        }
+        function uw(){
+            window.open("https://www.upwork.com/freelancers/~012c4e9f7c5bc428d3","_blank")
+        }
+        function copyEmail(details){
+            copy(details.name)
+        }
+    }
+    function genSkillsUI(){
+        if(!skillsTabOpen){
+            changeClass(skillsTab,"none","")
+            skillsUI.optionElement.appendChild(skillsTab); skillsTabOpen = true
         }
     }
     function projectInterface(){
-        indicateSection(projectsBtn); setSection(projectInterface.name)
+        indicateSection(projectsBtn); setSection("projectInterface")
         if(!projectsUI){
             projectsUI = document.createElement("div"); projectsUI.className = "flex vcenter hcenter";
         }
-        main.innerHTML = ""
+        remove(currentSectionWindow)
         main.appendChild(projectsUI); adjust()
+        currentSectionWindow = projectsUI
         if(!projectReq){
             projectReq = new Req(projectsData,"GET")
             projectReq.loadElement = projectsUI
             projectReq.loadClass = progress
             projectReq.onload = function(req){
-                projectsUI.className = "space-up relative";  projectsUI.id = "projects-ui"
-                parsedProjects = JSON.parse(req.object.response)
+                projectsUI.className = "space-up relative loaded";
+                parsedProjects = JSON.parse(req.object.responseText)
                 var heading = document.createElement("h1"); 
                 heading.innerHTML = "Past projects"
                 
@@ -139,12 +183,12 @@ window.onload = function(){
 websites that i have been permitted to share"
                 var viewHeadsup = document.createElement("label"); viewHeadsup.className = "space-up"
                 viewHeadsup.innerHTML = "Layout Options"
-                var viewControl = document.createElement("div"); viewControl.id = "view-control"
+                viewControl = document.createElement("div"); viewControl.id = "view-control"
                 viewControl.className = "flex vcenter minor-gap"
                 projectViewOptions = viewOptions(
                     viewControl,
                     [{icon:"img/list-view.png",gen:listView,name:"List view"},
-                    {icon:"img/grid-view.png",gen:gridView,name:"Grid view"}/*,{icon:"img/slide-view.png"}*/
+                    {icon:"img/grid-view.png",gen:gridView,name:"Grid view"}
                     ]
                 )
 
@@ -155,6 +199,7 @@ websites that i have been permitted to share"
 
                 listView()
                 append(projectsUI,[heading,tabWrapper])
+                adjust()
             }
             projectReq.send()
         }
@@ -166,7 +211,7 @@ websites that i have been permitted to share"
             function eachView(details){
                 var container = document.createElement("div"); container.className = "minor-pad pointer"
                 container.onclick = details.gen; container.title = details.name
-                if(details.gen){viewBtns[details.gen.name] = container}
+                if(details.gen){viewBtns[details.gen] = container}
                 var icon = document.createElement("img"); icon.className = "icon"; icon.src =  details.icon
                 container.appendChild(icon)
                 viewControl.appendChild(container)
@@ -193,9 +238,10 @@ websites that i have been permitted to share"
                 append(container,[coverImage,name])
                 projectsListView.appendChild(container)
             }
-            projectsTab.innerHTML = ""
+            if(selectedViewWindow){remove(selectedViewWindow)}
             projectsTab.appendChild(projectsListView)
-            indicateSelectedView(projectViewOptions[listView.name])
+            indicateSelectedView(projectViewOptions[listView])
+            selectedViewWindow = projectsListView
         }
         function gridView(){
             if(!projectsGridView){
@@ -218,9 +264,10 @@ websites that i have been permitted to share"
                 append(container,[coverImage,name])
                 projectsGridView.appendChild(container)
             }
-            projectsTab.innerHTML = ""
+            remove(selectedViewWindow)
             projectsTab.appendChild(projectsGridView)
-            indicateSelectedView(projectViewOptions[gridView.name])
+            indicateSelectedView(projectViewOptions[gridView])
+            selectedViewWindow = projectsGridView
         }
         function openProject(){
             if(!viewProject){
@@ -228,7 +275,6 @@ websites that i have been permitted to share"
             }
             viewProject.innerHTML = ""
             var data = parsedProjects[this.getAttribute("data-key")]
-            var screenThreshold = 900 // the min screen for split screen
             var imageSlider
             viewProjectOpen = true
             var projectTitle = document.createElement("h1"); projectTitle.innerHTML = data.name
@@ -253,28 +299,42 @@ websites that i have been permitted to share"
                 }
             }
             function adjust(){
+                var dim = windowDim()
+                var bigScreenclass = ["fixed","scrollable-v"]
                 if(!viewProjectOpen || currentSection !== projectsBtn){
-                    removeEvent(window,"resize",adjust)
+                    adjustDisplay(true)
                     return
                 }
-                var dim = windowDim()
-                if(dim.w >= screenThreshold){
-                    if(viewProjectSmallScreen){viewProjectSmallScreen.close()}
-                    tabWrapper.style.width = "60%"; projectsUI.appendChild(viewProject)
-                    viewProject.style.width = "38%";
-                    changeClass(viewProject,"",["absolute","top","right"])
-                }
-                else{
-                    if(!viewProjectSmallScreen){
-                        viewProjectSmallScreen = new miniTab(undefined,undefined,function(){viewProjectOpen = false})
+                adjustDisplay()
+                function adjustDisplay(dontOpen){
+                    if(dim.w >= screenThreshold){
+                        if(viewProjectSmallScreen){viewProjectSmallScreen.close()}
+                        if(!dontOpen){projectsUI.appendChild(viewProject)}
+                        var mainHeight = getMainHeight()
+                        tabWrapper.style.width = "60%"; 
+                        viewProject.style.width = "35%"; viewProject.style.height = mainHeight.toString() + "px" 
+                        viewProject.style.top = menu.getBoundingClientRect().bottom.toString() + "px"
+                        viewProject.style.right = "3%"
+                        changeClass(viewProject,"",bigScreenclass)
                     }
-                    tabWrapper.style.width = ""
-                    viewProject.style.width =""
-                    changeClass(viewProject,["absolute","top","right"],"")
-                    viewProjectSmallScreen.tab.appendChild(viewProject)
-                    viewProjectSmallScreen.open()
+                    else{
+                        if(!viewProjectSmallScreen){
+                            viewProjectSmallScreen = new miniTab(undefined,undefined,function(){viewProjectOpen = false})
+                        }
+                        tabWrapper.style.width = ""
+                        viewProject.style.width =""
+                        viewProject.style.height = ""
+                        viewProject.style.top = ""
+                        viewProject.style.right = ""
+                        changeClass(viewProject,bigScreenclass,"")
+                        if(!dontOpen){
+                            viewProjectSmallScreen.tab.appendChild(viewProject)
+                            viewProjectSmallScreen.open()
+                        }
+                    }
+                    if(dontOpen){remove(viewProject); if(viewProjectSmallScreen){viewProjectSmallScreen.close()}}
+                    viewProjectOpen = true
                 }
-                viewProjectOpen = true
             }
         }
         function indicateSelectedView(viewNode){
@@ -287,9 +347,10 @@ websites that i have been permitted to share"
         stopDefault(e)
         indicateSection(indexBtn)
         deleteSections()
-        main.innerHTML = ""; 
+        remove(currentSectionWindow)
         main.appendChild(indexUI)
         adjust()
+        currentSectionWindow = indexUI
     }
     function setSection(sectionFunction){
         try{localStorage.setItem(sectionKey,sectionFunction)}
